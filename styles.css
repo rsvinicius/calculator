@@ -20,14 +20,14 @@ body,
 }
 
 .display,
-.result {
+#display {
     background-color: var(--secondary-color);
     width: 500px;
     height: 100px;
     border-radius: 20px 20px 0 0;
 }
 
-.result {
+#display {
     margin: 0;
     display: flex;
     flex-direction: row;
