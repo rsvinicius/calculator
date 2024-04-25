@@ -2,8 +2,9 @@ let firstNumber;
 let secondNumber;
 let operator;
 
-const display = document.querySelector('#display')
+const display = document.getElementById('display');
 const keyboard = document.querySelector('.keyboard');
+const decimalButton = document.getElementById('decimal');
 
 keyboard.addEventListener('click', function (event) {
     if (event.target.tagName === 'BUTTON') {
@@ -39,25 +40,25 @@ keyboard.addEventListener('click', function (event) {
                 populateDisplay('9');
                 break;
             case 'add':
-                console.log('+');
+                defineOperator('+');
                 break;
             case 'subtract':
-                console.log('-');
+                defineOperator('-');
                 break;
             case 'multiply':
-                console.log('x');
+                defineOperator('*');
                 break;
             case 'divide':
-                console.log('÷');
+                defineOperator('/');
                 break;
             case 'decimal':
-                console.log('.');
+                populateDisplay('.');
                 break;
             case 'all-clear':
-                console.log('AC');
+                allClear()
                 break;
             case 'equals':
-                console.log('=');
+                operate(firstNumber, secondNumber, operator)
                 break;
             default:
                 console.log('Unknown button');
@@ -65,23 +66,67 @@ keyboard.addEventListener('click', function (event) {
     }
 });
 
-function populateDisplay(number) {
-    display.textContent = number;
+display.addEventListener('input', handleDecimalInput);
+
+function allClear() {
+    updateDisplayNumber('0', true);
+    firstNumber = undefined;
+    secondNumber = undefined;
+    operator = undefined;
+}
+
+function populateDisplay(value) {
+    updateDisplayNumber(value, false)
+
+    if (firstNumber) {
+        secondNumber = parseFloat(display.textContent);
+    }
+}
+
+function defineOperator(calc) {
+    operator = calc;
+    firstNumber = parseFloat(display.textContent);
 }
 
 function operate(n1, n2, operator) {
+    let result;
+
     switch (operator) {
         case '+':
-            return add(n1, n2);
+            result = add(n1, n2);
+            break;
         case '-':
-            return subtract(n1, n2);
+            result = subtract(n1, n2);
+            break;
         case '*':
-            return multiply(n1, n2);
+            result = multiply(n1, n2);
+            break;
         case '/':
-            return divide(n1, n2);
+            result = divide(n1, n2);
+            break;
         default:
-            return "OOPS... Invalid operator!"
+            alert("OOPS... Invalid operator!")
     }
+
+    updateDisplayNumber(result, true);
+}
+
+function handleDecimalInput() {
+    decimalButton.disabled = isCurrentDisplayNumberDecimal();
+}
+
+function isCurrentDisplayNumberDecimal() {
+    return display.textContent.includes('.');
+}
+
+function updateDisplayNumber(number, isAccumulative) {
+    if (display.textContent === '0' || isAccumulative || operator) {
+        display.textContent = number
+    } else {
+        display.textContent += number;
+    }
+
+    display.dispatchEvent(new Event('input'));
 }
 
 const add = function (a, b) {
