@@ -105,6 +105,7 @@ function operate(n1, n2, operator) {
             result = divide(n1, n2);
             break;
         default:
+            result = 0;
             alert("OOPS... Invalid operator!")
     }
 
