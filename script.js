@@ -1,64 +1,64 @@
-let firstNumber;
-let secondNumber;
-let operator;
+let operand = '';
+let accumulator = null;
+let currentOperator = null;
+let clearDisplay = false;
 
 const display = document.getElementById('display');
 const keyboard = document.querySelector('.keyboard');
-const decimalButton = document.getElementById('decimal');
 
 keyboard.addEventListener('click', function (event) {
     if (event.target.tagName === 'BUTTON') {
         switch (event.target.id) {
             case 'zero':
-                populateDisplay('0');
+                handleNumberInput('0');
                 break;
             case 'one':
-                populateDisplay('1');
+                handleNumberInput('1');
                 break;
             case 'two':
-                populateDisplay('2');
+                handleNumberInput('2');
                 break;
             case 'three':
-                populateDisplay('3');
+                handleNumberInput('3');
                 break;
             case 'four':
-                populateDisplay('4');
+                handleNumberInput('4');
                 break;
             case 'five':
-                populateDisplay('5');
+                handleNumberInput('5');
                 break;
             case 'six':
-                populateDisplay('6');
+                handleNumberInput('6');
                 break;
             case 'seven':
-                populateDisplay('7');
+                handleNumberInput('7');
                 break;
             case 'eight':
-                populateDisplay('8');
+                handleNumberInput('8');
                 break;
             case 'nine':
-                populateDisplay('9');
+                handleNumberInput('9');
                 break;
             case 'add':
-                defineOperator('+');
+                handleOperatorInput('+');
                 break;
             case 'subtract':
-                defineOperator('-');
+                handleOperatorInput('-');
                 break;
             case 'multiply':
-                defineOperator('*');
+                handleOperatorInput('*');
                 break;
             case 'divide':
-                defineOperator('/');
+                handleOperatorInput('/');
                 break;
             case 'decimal':
-                populateDisplay('.');
+                handleDecimalInput('.');
                 break;
             case 'all-clear':
                 allClear()
                 break;
             case 'equals':
-                operate(firstNumber, secondNumber, operator)
+                handleEqualsInput();
                 break;
             default:
                 console.log('Unknown button');
@@ -66,82 +66,103 @@ keyboard.addEventListener('click', function (event) {
     }
 });
 
-display.addEventListener('input', handleDecimalInput);
-
 function allClear() {
-    updateDisplayNumber('0', true);
-    firstNumber = undefined;
-    secondNumber = undefined;
-    operator = undefined;
+    operand = '';
+    accumulator = null;
+    currentOperator = null;
+    clearDisplay = false;
+    updateDisplay('0');
 }
 
-function populateDisplay(value) {
-    updateDisplayNumber(value, false)
+function handleOperatorInput(operator) {
+    if (accumulator !== null && currentOperator && operand !== '') {
+        evaluate();
+    } else if (operand !== '') {
+        accumulator = parseFloat(operand);
+    }
 
-    if (firstNumber) {
-        secondNumber = parseFloat(display.textContent);
+    currentOperator = operator;
+    clearDisplay = true;
+}
+
+function handleNumberInput(number) {
+    if (clearDisplay || operand === '0') {
+        operand = '';
+        clearDisplay = false;
+    }
+
+    operand += number;
+    updateDisplay(operand);
+}
+
+function handleDecimalInput() {
+    if (operand === '') {
+        operand = '0';
+    }
+
+    if (!operand.includes('.')) {
+        operand += '.';
+    }
+
+    updateDisplay(operand);
+}
+
+function updateDisplay(input) {
+    display.textContent = input;
+}
+
+function handleEqualsInput() {
+    if (accumulator !== null && currentOperator && operand !== '') {
+        evaluate();
+        currentOperator = null;
     }
 }
 
-function defineOperator(calc) {
-    operator = calc;
-    firstNumber = parseFloat(display.textContent);
+function evaluate() {
+    if (operand !== '') {
+        accumulator = calculate(accumulator, parseFloat(operand), currentOperator);
+    }
+
+    updateDisplay(accumulator);
+    operand = '';
+    clearDisplay = true;
 }
 
-function operate(n1, n2, operator) {
+function calculate(acc, curr, operator) {
     let result;
 
     switch (operator) {
         case '+':
-            result = add(n1, n2);
+            result = add(acc, curr);
             break;
         case '-':
-            result = subtract(n1, n2);
+            result = subtract(acc, curr);
             break;
         case '*':
-            result = multiply(n1, n2);
+            result = multiply(acc, curr);
             break;
         case '/':
-            result = divide(n1, n2);
+            if (curr === 0) {
+                return 'Error';
+            }
+            result = divide(acc, curr);
             break;
         default:
-            result = 0;
-            alert("OOPS... Invalid operator!")
+            result = acc;
     }
 
-    updateDisplayNumber(result, true);
+    return roundTo(result, 5);
 }
 
-function handleDecimalInput() {
-    decimalButton.disabled = isCurrentDisplayNumberDecimal();
-}
+function roundTo(num, places) {
+    let factor = Math.pow(10, places);
+    return Math.round(num * factor) / factor;
+  }
 
-function isCurrentDisplayNumberDecimal() {
-    return display.textContent.includes('.');
-}
+const add = (a, b) => a + b;
 
-function updateDisplayNumber(number, isAccumulative) {
-    if (display.textContent === '0' || isAccumulative || operator) {
-        display.textContent = number
-    } else {
-        display.textContent += number;
-    }
+const subtract = (a, b) => a - b;
 
-    display.dispatchEvent(new Event('input'));
-}
+const multiply = (a, b) => a * b;
 
-const add = function (a, b) {
-    return a + b;
-};
-
-const subtract = function (a, b) {
-    return a - b;
-};
-
-const multiply = function (a, b) {
-    return a * b;
-};
-
-const divide = function (a, b) {
-    return a / b;
-};
+const divide = (a, b) => a / b;
