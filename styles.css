@@ -3,12 +3,18 @@
     --secondary-color: #90caf9;
     --tertiary-color: #42a5f5;
     --highlight-color: #e3f2fd;
-    --text-color: white;
+    --calculator-text-color: white;
+    --border: black;
 }
 
 * {
     font-family: 'DM Mono', 'Roboto Mono', 'Courier New', 'Open Sans', sans-serif;
-    color: white;
+}
+
+button,
+.title,
+.display {
+    color: var(--calculator-text-color);
 }
 
 body,
@@ -44,6 +50,7 @@ body,
     background-color: var(--primary-color);
     margin: 100px 0;
     border-radius: 20px 20px;
+    border: 3px var(--border) solid;
 }
 
 button {
@@ -92,4 +99,28 @@ button:active {
 .title {
     font-size: 48px;
     padding-left: 30px;
+}
+
+footer {
+    display: flex;
+    flex-direction: row;
+    font-size: 16px;
+}
+
+a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 10px;
+    text-decoration: none; 
+}
+
+.fa-github {
+    color: black;
+    font-size: 24px;   
+    transition: color 0.3s ease; 
+}
+
+.fa-github:hover {
+    color: #ccc;        
 }
