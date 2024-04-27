@@ -26,67 +26,20 @@ const keyMap = {
 };
 
 
-keyboard.addEventListener('click', function (event) {
-    if (event.target.tagName === 'BUTTON') {
-        switch (event.target.id) {
-            case 'zero':
-                handleNumberInput('0');
-                break;
-            case 'one':
-                handleNumberInput('1');
-                break;
-            case 'two':
-                handleNumberInput('2');
-                break;
-            case 'three':
-                handleNumberInput('3');
-                break;
-            case 'four':
-                handleNumberInput('4');
-                break;
-            case 'five':
-                handleNumberInput('5');
-                break;
-            case 'six':
-                handleNumberInput('6');
-                break;
-            case 'seven':
-                handleNumberInput('7');
-                break;
-            case 'eight':
-                handleNumberInput('8');
-                break;
-            case 'nine':
-                handleNumberInput('9');
-                break;
-            case 'add':
-                handleOperatorInput('+');
-                break;
-            case 'subtract':
-                handleOperatorInput('-');
-                break;
-            case 'multiply':
-                handleOperatorInput('*');
-                break;
-            case 'divide':
-                handleOperatorInput('/');
-                break;
-            case 'decimal':
-                handleDecimalInput('.');
-                break;
-            case 'all-clear':
-                allClear()
-                break;
-            case 'equals':
-                handleEqualsInput();
-                break;
-            default:
-                console.log('Unknown button');
-        }
-    }
-});
+keyboard.addEventListener('click', handleButtonClick);
 
 document.addEventListener("keydown", handleKeyPress);
+
+function handleButtonClick(event) {
+    if (event.target.tagName === 'BUTTON') {
+        const value = event.target.dataset.value;
+        
+        const action = keyMap[value];
+        if (action) {
+            action();
+        }
+    }
+}
 
 function handleKeyPress(event) {
     const key = event.key;
