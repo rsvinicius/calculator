@@ -5,10 +5,12 @@
     --highlight-color: #e3f2fd;
     --calculator-text-color: white;
     --border: black;
+    --icon-color: black;
+    --icon-hover-color: #ccc;
 }
 
 * {
-    font-family: 'DM Mono', 'Roboto Mono', 'Courier New', 'Open Sans', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
 button,
@@ -57,9 +59,10 @@ button {
     width: 100px;
     height: 100px;
     background-color: var(--tertiary-color);
-    font-size: 72px;
+    font-size: 64px;
     border: none;
     border-radius: 10px;
+    cursor: pointer;
 }
 
 button:active {
@@ -97,8 +100,9 @@ button:active {
 }
 
 .title {
-    font-size: 48px;
+    font-size: 64px;
     padding-left: 30px;
+    margin: 0;
 }
 
 footer {
@@ -116,11 +120,11 @@ a {
 }
 
 .fa-github {
-    color: black;
+    color: var(--icon-color);
     font-size: 24px;   
     transition: color 0.3s ease; 
 }
 
 .fa-github:hover {
-    color: #ccc;        
+    color: var(--icon-hover-color);        
 }
