@@ -5,6 +5,26 @@ let clearDisplay = false;
 
 const display = document.getElementById('display');
 const keyboard = document.querySelector('.keyboard');
+const keyMap = {
+    '0': () => handleNumberInput('0'),
+    '1': () => handleNumberInput('1'),
+    '2': () => handleNumberInput('2'),
+    '3': () => handleNumberInput('3'),
+    '4': () => handleNumberInput('4'),
+    '5': () => handleNumberInput('5'),
+    '6': () => handleNumberInput('6'),
+    '7': () => handleNumberInput('7'),
+    '8': () => handleNumberInput('8'),
+    '9': () => handleNumberInput('9'),
+    '+': () => handleOperatorInput('+'),
+    '-': () => handleOperatorInput('-'),
+    '*': () => handleOperatorInput('*'),
+    '/': () => handleOperatorInput('/'),
+    '.': () => handleDecimalInput('.'),
+    'Escape': () => allClear(),
+    '=': () => handleEqualsInput()
+};
+
 
 keyboard.addEventListener('click', function (event) {
     if (event.target.tagName === 'BUTTON') {
@@ -66,12 +86,15 @@ keyboard.addEventListener('click', function (event) {
     }
 });
 
-function allClear() {
-    operand = '';
-    accumulator = null;
-    currentOperator = null;
-    clearDisplay = false;
-    updateDisplay('0');
+document.addEventListener("keydown", handleKeyPress);
+
+function handleKeyPress(event) {
+    const key = event.key;
+
+    const action = keyMap[key];
+    if (action) {
+        action();
+    }
 }
 
 function handleOperatorInput(operator) {
@@ -107,15 +130,23 @@ function handleDecimalInput() {
     updateDisplay(operand);
 }
 
-function updateDisplay(input) {
-    display.textContent = input;
-}
-
 function handleEqualsInput() {
     if (accumulator !== null && currentOperator && operand !== '') {
         evaluate();
         currentOperator = null;
     }
+}
+
+function updateDisplay(input) {
+    display.textContent = input;
+}
+
+function allClear() {
+    operand = '';
+    accumulator = null;
+    currentOperator = null;
+    clearDisplay = false;
+    updateDisplay('0');
 }
 
 function evaluate() {
@@ -157,7 +188,7 @@ function calculate(acc, curr, operator) {
 function roundTo(num, places) {
     let factor = Math.pow(10, places);
     return Math.round(num * factor) / factor;
-  }
+}
 
 const add = (a, b) => a + b;
 
